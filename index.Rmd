@@ -1,6 +1,6 @@
 ---
 title: "Gov 50 Final Project"
-author: "Your Name Here"
+author: "Karen Torres"
 description: "My final project"
 output:
   distill::distill_article:
@@ -11,4 +11,4 @@ output:
 
 ## Project thoughts
 
-I am interested in exploring data related to...
+I am interested in exploring data related to the Latino Vote. I am currently a fellow for Voto Latino and they do a lot of research on the Latino vote. I think it would be really cool to do my final project on the Latino vote while working with Voto Latino. Voto Latino will be an excellent resource for this project. I will probably focus on voter suppression or misinformation. I look forward to be able to do my project on a topic I am so passionate about. 
