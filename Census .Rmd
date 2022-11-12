@@ -1,0 +1,57 @@
+---
+title: "Tidycensus"
+author: "Karen Torres"
+date: "2022-11-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidycensus)
+options(tigris_use_cache = TRUE)
+
+```
+
+```{r}
+total_population_10 <- get_decennial(
+  geography = "state", 
+  variables = "P001001",
+  year = 2010)
+total_population_10
+```
+```{r}
+dc_income <- get_acs(
+  geography = "tract", 
+  variables = "B19013_001",
+  state = "DC", 
+  year = 2020,
+  geometry = TRUE)
+dc_income
+
+```
+
+```{r}
+plot(dc_income["estimate"])
+
+```
+```{r}
+boston <-get_acs(geography= "tract",
+  variables = "B19013_001",
+  state = "MA", 
+  year = 2020,
+  county = 025,
+  geometry = TRUE)
+boston
+```
+
+```{r}
+plot(boston["estimate"])
+```
+
+
+
+
+

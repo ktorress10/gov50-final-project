@@ -17,4 +17,82 @@ I am interested in exploring data related to the Latino Vote. I am currently a f
 
 Why are Latinos voters in the battleground states in 2022 supporting passing a federal law to protect abortion access after historically being for the most part, against protecting abortion access? To answer this research question, I will be using the October Latino Battleground Survey Results from Voto Latino. When it comes to my hypothesis,  I believe that Latinos are more likely to support passing a federal law to protect abortion because the Latino population in the United States is both largely young and democrat. A Pew Research Center study found that nearly half of U.S.-born Latinos are younger than 18. With the majority of the Latino voting population being so young, I do expect them to be in favor of passing a law that protects women’s reproductive rights. Additionally, Voto Latino’s data found that Democrats have a trust advantage with Latino voters. In this study, I plan to examine what kind of  Latino voters were more likely to support abortion access. I would be specifically looking at age and party. The explanatory variables of interest are whether the voter was young or not young and then democrat or republican. The variable is coded =1 if they are under 18 and =0 if above 18. The same would be true for whether they are Democrats or Republicans. My outcome variable would be the count of voters who supported abortion rights that were young and democratic. I would measure this by probably getting the average and seeing what percentage of the Latino voters were young and democratic. If the percentage was higher than 50 percent, it would prove my hypothesis. If the percentage is lower, then it means I was wrong and that the majority of the supporters were not young democrats and that perhaps age and party do not have a relation with whether the voter supports abortion access or not. 
 
+## One data visualization 
+I will be working with the census data for my dataset. I want to work with the Hispanic community as of right now. However, first I want to explore data using th census, and choose a topic that interest me. This visualization is of income in Boston which is the city I want to focus on as well as the topic. The final visualization I also included is using the cenusus to explore race. My hope is to eventually combine all these moving parts. However, for now I have these two final visualizations for milestone 3. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidycensus)
+options(tigris_use_cache = TRUE)
+
+```
+
+```{r}
+total_population_10 <- get_decennial(
+  geography = "state", 
+  variables = "P001001",
+  year = 2010)
+total_population_10
+```
+
+```{r}
+boston <-get_acs(geography= "tract",
+  variables = "B19013_001",
+  state = "MA", 
+  year = 2020,
+  county = 025,
+  geometry = TRUE)
+boston
+```
+
+```{r}
+plot(boston["estimate"])
+```
+```{r}
+library(tidycensus)
+library (tidyverse)
+hennepin_race <- get_decennial(
+  geography = "tract",
+  state = "MN",
+  county = "Hennepin",
+  variables = c(
+    Hispanic = "P2_002N",
+    White = "P2_005N",
+    Black = "P2_006N",
+    Native = "P2_007N",
+    Asian = "P2_008N"
+  ),
+  summary_var = "P2_001N",
+  year = 2020,
+  geometry = TRUE
+) |>
+  mutate(percent = 100 * (value / summary_value))
+hennepin_race
+```
+```{r}
+library(tmap)
+hennepin_black <- filter(hennepin_race, 
+                         variable == "Black")
+
+tm_shape(hennepin_black) + 
+  tm_polygons()
+```
+```{r}
+tm_shape(hennepin_black) + 
+  tm_polygons(col = "percent")
+```
+```{r}
+tm_shape(hennepin_black) + 
+  tm_polygons(col = "percent",
+          style = "quantile",
+          n = 5,
+          palette = "Purples",
+          title = "2020 US Census") + 
+  tm_layout(title = "Percent Black\nby Census tract",
+            frame = FALSE,
+            legend.outside = TRUE)
+```
 
