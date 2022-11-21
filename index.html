@@ -1526,153 +1526,72 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://walker-data.com/tidycensus/'>tidycensus</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://broom.tidymodels.org/'>broom</a></span><span class='op'>)</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span><span class='op'>(</span>tigris_use_cache <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>total_population_10</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://walker-data.com/tidycensus/reference/get_decennial.html'>get_decennial</a></span><span class='op'>(</span></span>
-<span>  geography <span class='op'>=</span> <span class='st'>"state"</span>, </span>
-<span>  variables <span class='op'>=</span> <span class='st'>"P001001"</span>,</span>
-<span>  year <span class='op'>=</span> <span class='fl'>2010</span><span class='op'>)</span></span>
-<span><span class='va'>total_population_10</span></span></code></pre>
-</div>
-<pre><code># A tibble: 52 × 4
-   GEOID NAME        variable    value
-   &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt;
- 1 01    Alabama     P001001   4779736
- 2 02    Alaska      P001001    710231
- 3 04    Arizona     P001001   6392017
- 4 05    Arkansas    P001001   2915918
- 5 06    California  P001001  37253956
- 6 22    Louisiana   P001001   4533372
- 7 21    Kentucky    P001001   4339367
- 8 08    Colorado    P001001   5029196
- 9 09    Connecticut P001001   3574097
-10 10    Delaware    P001001    897934
-# … with 42 more rows</code></pre>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>boston</span> <span class='op'>&lt;-</span><span class='fu'><a href='https://walker-data.com/tidycensus/reference/get_acs.html'>get_acs</a></span><span class='op'>(</span>geography<span class='op'>=</span> <span class='st'>"tract"</span>,</span>
-<span>  variables <span class='op'>=</span> <span class='st'>"B19013_001"</span>,</span>
-<span>  state <span class='op'>=</span> <span class='st'>"MA"</span>, </span>
-<span>  year <span class='op'>=</span> <span class='fl'>2020</span>,</span>
-<span>  county <span class='op'>=</span> <span class='fl'>025</span>,</span>
-<span>  geometry <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
-<span><span class='va'>boston</span></span></code></pre>
-</div>
-<pre><code>Simple feature collection with 235 features and 5 fields
-Geometry type: MULTIPOLYGON
-Dimension:     XY
-Bounding box:  xmin: -71.19125 ymin: 42.22793 xmax: -70.9226 ymax: 42.45012
-Geodetic CRS:  NAD83
-First 10 features:
-         GEOID                                                NAME
-1  25025010802  Census Tract 108.02, Suffolk County, Massachusetts
-2  25025030100     Census Tract 301, Suffolk County, Massachusetts
-3  25025110607 Census Tract 1106.07, Suffolk County, Massachusetts
-4  25025130406 Census Tract 1304.06, Suffolk County, Massachusetts
-5  25025050400     Census Tract 504, Suffolk County, Massachusetts
-6  25025060400     Census Tract 604, Suffolk County, Massachusetts
-7  25025060700     Census Tract 607, Suffolk County, Massachusetts
-8  25025080401  Census Tract 804.01, Suffolk County, Massachusetts
-9  25025080601  Census Tract 806.01, Suffolk County, Massachusetts
-10 25025091400     Census Tract 914, Suffolk County, Massachusetts
-     variable estimate   moe                       geometry
-1  B19013_001   146094 21244 MULTIPOLYGON (((-71.08986 4...
-2  B19013_001   101648 17907 MULTIPOLYGON (((-71.05807 4...
-3  B19013_001   116838 26681 MULTIPOLYGON (((-71.14775 4...
-4  B19013_001    49488 21210 MULTIPOLYGON (((-71.16157 4...
-5  B19013_001    66875 20837 MULTIPOLYGON (((-71.04029 4...
-6  B19013_001   150784 20824 MULTIPOLYGON (((-71.04751 4...
-7  B19013_001    19161  2450 MULTIPOLYGON (((-71.05624 4...
-8  B19013_001    21250 12452 MULTIPOLYGON (((-71.08746 4...
-9  B19013_001    14255 10147 MULTIPOLYGON (((-71.09445 4...
-10 B19013_001    45486 19095 MULTIPOLYGON (((-71.07214 4...</code></pre>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>boston</span><span class='op'>[</span><span class='st'>"estimate"</span><span class='op'>]</span><span class='op'>)</span></span></code></pre>
-</div>
-<p><img src="index_files/figure-html5/unnamed-chunk-4-1.png" width="624" /></p>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://walker-data.com/tidycensus/'>tidycensus</a></span><span class='op'>)</span></span>
-<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span> <span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
-<span><span class='va'>hennepin_race</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://walker-data.com/tidycensus/reference/get_decennial.html'>get_decennial</a></span><span class='op'>(</span></span>
-<span>  geography <span class='op'>=</span> <span class='st'>"tract"</span>,</span>
-<span>  state <span class='op'>=</span> <span class='st'>"MN"</span>,</span>
-<span>  county <span class='op'>=</span> <span class='st'>"Hennepin"</span>,</span>
-<span>  variables <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>vars</span><span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span></span>
 <span>    Hispanic <span class='op'>=</span> <span class='st'>"P2_002N"</span>,</span>
 <span>    White <span class='op'>=</span> <span class='st'>"P2_005N"</span>,</span>
 <span>    Black <span class='op'>=</span> <span class='st'>"P2_006N"</span>,</span>
 <span>    Native <span class='op'>=</span> <span class='st'>"P2_007N"</span>,</span>
-<span>    Asian <span class='op'>=</span> <span class='st'>"P2_008N"</span></span>
-<span>  <span class='op'>)</span>,</span>
-<span>  summary_var <span class='op'>=</span> <span class='st'>"P2_001N"</span>,</span>
+<span>    Asian <span class='op'>=</span> <span class='st'>"P2_008N"</span>, </span>
+<span>    total<span class='op'>=</span> <span class='st'>"P2_001N"</span><span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span>  <span class='va'>boston_race</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://walker-data.com/tidycensus/reference/get_decennial.html'>get_decennial</a></span><span class='op'>(</span></span>
+<span>  geography <span class='op'>=</span> <span class='st'>"tract"</span>,</span>
+<span>  state <span class='op'>=</span> <span class='st'>"MA"</span>,</span>
+<span>  county <span class='op'>=</span> <span class='st'>"Suffolk"</span>,</span>
+<span>  variables<span class='op'>=</span><span class='va'>vars</span>,</span>
 <span>  year <span class='op'>=</span> <span class='fl'>2020</span>,</span>
-<span>  geometry <span class='op'>=</span> <span class='cn'>TRUE</span></span>
-<span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>percent <span class='op'>=</span> <span class='fl'>100</span> <span class='op'>*</span> <span class='op'>(</span><span class='va'>value</span> <span class='op'>/</span> <span class='va'>summary_value</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='va'>hennepin_race</span></span></code></pre>
+<span>  geometry <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span>  <span class='va'>boston_race</span></span></code></pre>
 </div>
-<pre><code>Simple feature collection with 1645 features and 6 fields
+<pre><code>Simple feature collection with 1410 features and 4 fields
 Geometry type: MULTIPOLYGON
 Dimension:     XY
-Bounding box:  xmin: -93.76838 ymin: 44.78538 xmax: -93.17722 ymax: 45.24662
+Bounding box:  xmin: -71.19125 ymin: 42.22793 xmax: -70.9226 ymax: 42.45012
 Geodetic CRS:  NAD83
-# A tibble: 1,645 × 7
-   GEOID NAME  varia…¹ value summa…²                  geometry percent
- * &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;MULTIPOLYGON [°]&gt;   &lt;dbl&gt;
- 1 2705… Cens… Hispan…   124    2443 (((-93.3194 44.80474, -9…   5.08 
- 2 2705… Cens… White    2028    2443 (((-93.3194 44.80474, -9…  83.0  
- 3 2705… Cens… Black      61    2443 (((-93.3194 44.80474, -9…   2.50 
- 4 2705… Cens… Native      7    2443 (((-93.3194 44.80474, -9…   0.287
- 5 2705… Cens… Asian      90    2443 (((-93.3194 44.80474, -9…   3.68 
- 6 2705… Cens… Hispan…   391    2404 (((-93.30335 45.06204, -…  16.3  
- 7 2705… Cens… White     960    2404 (((-93.30335 45.06204, -…  39.9  
- 8 2705… Cens… Black     406    2404 (((-93.30335 45.06204, -…  16.9  
- 9 2705… Cens… Native     13    2404 (((-93.30335 45.06204, -…   0.541
-10 2705… Cens… Asian     476    2404 (((-93.30335 45.06204, -…  19.8  
-# … with 1,635 more rows, and abbreviated variable names ¹​variable,
-#   ²​summary_value</code></pre>
+# A tibble: 1,410 × 5
+   GEOID       NAME            varia…¹ value                  geometry
+   &lt;chr&gt;       &lt;chr&gt;           &lt;chr&gt;   &lt;dbl&gt;        &lt;MULTIPOLYGON [°]&gt;
+ 1 25025010802 Census Tract 1… Hispan…   139 (((-71.08986 42.35158, -…
+ 2 25025010802 Census Tract 1… White    2453 (((-71.08986 42.35158, -…
+ 3 25025010802 Census Tract 1… Black      44 (((-71.08986 42.35158, -…
+ 4 25025010802 Census Tract 1… Native      4 (((-71.08986 42.35158, -…
+ 5 25025010802 Census Tract 1… Asian     281 (((-71.08986 42.35158, -…
+ 6 25025010802 Census Tract 1… total    3058 (((-71.08986 42.35158, -…
+ 7 25025030100 Census Tract 3… Hispan…   101 (((-71.05807 42.36726, -…
+ 8 25025030100 Census Tract 3… White    1842 (((-71.05807 42.36726, -…
+ 9 25025030100 Census Tract 3… Black      26 (((-71.05807 42.36726, -…
+10 25025030100 Census Tract 3… Native      0 (((-71.05807 42.36726, -…
+# … with 1,400 more rows, and abbreviated variable name ¹​variable</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/r-tmap/tmap'>tmap</a></span><span class='op'>)</span></span>
-<span><span class='va'>hennepin_black</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>hennepin_race</span>, </span>
-<span>                         <span class='va'>variable</span> <span class='op'>==</span> <span class='st'>"Black"</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='fu'><a href='https://rdrr.io/pkg/tmap/man/tm_shape.html'>tm_shape</a></span><span class='op'>(</span><span class='va'>hennepin_black</span><span class='op'>)</span> <span class='op'>+</span> </span>
-<span>  <span class='fu'><a href='https://rdrr.io/pkg/tmap/man/tm_polygons.html'>tm_polygons</a></span><span class='op'>(</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>boston_race2</span> <span class='op'>&lt;-</span> <span class='va'>boston_race</span><span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span> <span class='op'>(</span>names_from <span class='op'>=</span> <span class='st'>"variable"</span>, values_from <span class='op'>=</span> <span class='st'>"value"</span><span class='op'>)</span><span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>Hispanic_percentage <span class='op'>=</span> <span class='va'>Hispanic</span><span class='op'>/</span><span class='va'>total</span><span class='op'>*</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>White_percentage <span class='op'>=</span> <span class='va'>White</span><span class='op'>/</span><span class='va'>total</span><span class='op'>*</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>Black_percentage <span class='op'>=</span> <span class='va'>Black</span><span class='op'>/</span><span class='va'>total</span><span class='op'>*</span><span class='fl'>100</span><span class='op'>)</span></span></code></pre>
 </div>
-<p><img src="index_files/figure-html5/unnamed-chunk-6-1.png" width="624" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/pkg/tmap/man/tm_shape.html'>tm_shape</a></span><span class='op'>(</span><span class='va'>hennepin_black</span><span class='op'>)</span> <span class='op'>+</span> </span>
-<span>  <span class='fu'><a href='https://rdrr.io/pkg/tmap/man/tm_polygons.html'>tm_polygons</a></span><span class='op'>(</span>col <span class='op'>=</span> <span class='st'>"percent"</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>boston_race2</span><span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggsf.html'>geom_sf</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>fill<span class='op'>=</span><span class='va'>Hispanic_percentage</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_viridis.html'>scale_fill_viridis_c</a></span><span class='op'>(</span>option <span class='op'>=</span> <span class='st'>"H"</span><span class='op'>)</span></span></code></pre>
 </div>
-<p><img src="index_files/figure-html5/unnamed-chunk-7-1.png" width="624" /></p>
+<p><img src="index_files/figure-html5/unnamed-chunk-4-1.png" width="624" /></p>
 </div>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/pkg/tmap/man/tm_shape.html'>tm_shape</a></span><span class='op'>(</span><span class='va'>hennepin_black</span><span class='op'>)</span> <span class='op'>+</span> </span>
-<span>  <span class='fu'><a href='https://rdrr.io/pkg/tmap/man/tm_polygons.html'>tm_polygons</a></span><span class='op'>(</span>col <span class='op'>=</span> <span class='st'>"percent"</span>,</span>
-<span>          style <span class='op'>=</span> <span class='st'>"quantile"</span>,</span>
-<span>          n <span class='op'>=</span> <span class='fl'>5</span>,</span>
-<span>          palette <span class='op'>=</span> <span class='st'>"Purples"</span>,</span>
-<span>          title <span class='op'>=</span> <span class='st'>"2020 US Census"</span><span class='op'>)</span> <span class='op'>+</span> </span>
-<span>  <span class='fu'><a href='https://rdrr.io/pkg/tmap/man/tm_layout.html'>tm_layout</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Percent Black\nby Census tract"</span>,</span>
-<span>            frame <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
-<span>            legend.outside <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span></code></pre>
-</div>
-<p><img src="index_files/figure-html5/unnamed-chunk-8-1.png" width="624" /></p>
-</div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<h2 id="final-project-milestone-4">Final Project Milestone 4</h2>
+<p>This visulation shows the Hispanic population of MA. I want to be able to look at income and immigration using the census data to answer my question of does race effect income level.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
