@@ -1,24 +1,17 @@
 ---
-title: "Gov 50 Final Project"
+title: " Boston’s Hispanic Population’s Income and Education Levels"
 author: "Karen Torres"
 description: "My final project"
 output:
   distill::distill_article:
     self_contained: false
 ---
+**Introduction** 
 
+How does the Hispanic percentage affect the average income of a census tract when holding the college degree percentage constant? How does the college degree percentage affect the average income of a census tract in Boston when holding the Hispanic percentage constant? I hypothesize that the average income of a census tract will decrease when the Hispanic percentage increases while the college degree percentage remains constant. Additionally, I hypothesize that the college degree percentage will increase as the average income of a census tract increases when the Hispanic population stays constant. It is important to understand how race/ethnicity, education, and income affect one another in a city like Boston. The Census Bureau, since the 1970s, has conducted content tests to research and improve the design and function of questions on race and ethnicity (United States Census Bureau). More specifically, it is important to understand the relationships between income, education, and the Hispanic population. According to The Mauricio Gaston Institute for Latino Community Development and Public Policy, Boston is home to an estimated 135,757 Latinos (Granberry & Agarwal 4). This same study concluded that Latinos have the highest share of their adult population lacking a high school diploma, and therefore these educational disparities impact the labor force participation of Latinos in Boston (Granberry & Agarwal 7). It is important that we continue to investigate the relationship between the Hispanic population in Boston, education level, and income level. Although the research from The Mauricio Gaston Institute for Latino Community Development and Public Policy gives us general percentages and conclusions about the Hispanic population in Boston. However, it does not note anything about college education, nor does it break down Boston as the census does. Therefore it is important to investigate the answers to my research questions. 
 
-
-## Project thoughts (Milestone 1)
-
-I am interested in exploring data related to the Latino Vote. I am currently a fellow for Voto Latino and they do a lot of research on the Latino vote. I think it would be really cool to do my final project on the Latino vote while working with Voto Latino. Voto Latino will be an excellent resource for this project. I will probably focus on voter suppression or misinformation. I look forward to be able to do my project on a topic I am so passionate about. 
-
-## Project Proposal for Data Set (Milestone 2)
-
-Why are Latinos voters in the battleground states in 2022 supporting passing a federal law to protect abortion access after historically being for the most part, against protecting abortion access? To answer this research question, I will be using the October Latino Battleground Survey Results from Voto Latino. When it comes to my hypothesis,  I believe that Latinos are more likely to support passing a federal law to protect abortion because the Latino population in the United States is both largely young and democrat. A Pew Research Center study found that nearly half of U.S.-born Latinos are younger than 18. With the majority of the Latino voting population being so young, I do expect them to be in favor of passing a law that protects women’s reproductive rights. Additionally, Voto Latino’s data found that Democrats have a trust advantage with Latino voters. In this study, I plan to examine what kind of  Latino voters were more likely to support abortion access. I would be specifically looking at age and party. The explanatory variables of interest are whether the voter was young or not young and then democrat or republican. The variable is coded =1 if they are under 18 and =0 if above 18. The same would be true for whether they are Democrats or Republicans. My outcome variable would be the count of voters who supported abortion rights that were young and democratic. I would measure this by probably getting the average and seeing what percentage of the Latino voters were young and democratic. If the percentage was higher than 50 percent, it would prove my hypothesis. If the percentage is lower, then it means I was wrong and that the majority of the supporters were not young democrats and that perhaps age and party do not have a relation with whether the voter supports abortion access or not. 
-
-## One data visualization 
-I will be working with the census data for my dataset. I want to work with the Hispanic community as of right now. However, first I want to explore data using th census, and choose a topic that interest me. This visualization is of income in Boston which is the city I want to focus on as well as the topic. The final visualization I also included is using the cenusus to explore race. My hope is to eventually combine all these moving parts. However, for now I have these two final visualizations for milestone 3. 
+**Data**
+ In order to answer this question I used the American Community Survey (ACS), which according to the U.S. Census is “the premier source for detailed population and housing information about our nation” (United States Census Bureau). The ACS releases new data yearly in the form of data tables that you can access with different data tools. I accessed the data for my project via API. The research design for my project is cross-sectional. A cross-sectional research design is a type of observational study design where the investigator measures the outcome and the exposures in the study participants at the same time.The data I used is solely from the year 2020 and so that is why we can say it is cross-sectional. With the help of my TF, I was able to use the internet to help find the right code to be able to look at the Hispanic population, income level, and education level for Suffolk county. In this study, Hispanic_percentage and college_degree_percentage are the x variables and income is the y variable for my project.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -35,15 +28,13 @@ options(tigris_use_cache = TRUE)
 
 ```{r}
 vars<- c(
-    Hispanic = "P2_002N",
-    White = "P2_005N",
-    Black = "P2_006N",
-    Native = "P2_007N",
-    Asian = "P2_008N", 
-    total= "P2_001N")
+    Hispanic = "B03002_012", 
+    total= "B03002_001", 
+    income= "B19013_001", 
+    education ="B25013_006" )
 
 
-  boston_race <- get_decennial(
+  boston_race <- get_acs( 
   geography = "tract",
   state = "MA",
   county = "Suffolk",
@@ -54,27 +45,64 @@ vars<- c(
 ```
 
 
-
-
-
-
-
-
 ```{r}
 boston_race2 <- boston_race|>
-  pivot_wider (names_from = "variable", values_from = "value")|>
+  select(-moe)|>
+  pivot_wider (names_from = "variable", values_from = "estimate")|>
   mutate(Hispanic_percentage = Hispanic/total*100)|>
-  mutate(White_percentage = White/total*100)|>
-  mutate(Black_percentage = Black/total*100)
-
+  mutate(college_degree_percentage = education/total*100)
+boston_race2
 ```
 
+**Plot that summarizes the dependent variable**
 ```{r}
 boston_race2|>
   ggplot()+
   geom_sf(aes(fill=Hispanic_percentage))+
   scale_fill_viridis_c(option = "H")
-```
-## Final Project Milestone 4
-This visulation shows the Hispanic population of MA. I want to be able to look at income and immigration using the census data to answer my question of does race effect income level. 
 
+```
+**Results**
+
+
+**How does the Hispanic percentage affect the average income of a census tract 
+when holding the college degree percentage constant?**
+
+
+
+```{r}
+plot_q2<-ggplot(boston_race2,aes(x=Hispanic_percentage, y=income))+
+  geom_point()+
+  labs(x="Hispanic %", y="Avg income tract")
+plot_q2
+```
+
+**How does the college degree percentage affect the average income of a census 
+tract in Boston when holding the Hispanic percentage constant? **
+
+```{r}
+plot_q3<- ggplot(boston_race2,aes(x=college_degree_percentage, y=income)) +
+  geom_point() +
+  labs(x= "college degree %", y= "income")
+plot_q3    
+```
+
+
+```{r}
+m.lm<-lm(income ~ Hispanic_percentage + college_degree_percentage, data =boston_race2)
+modelsummary::modelsummary(m.lm,stars=TRUE)
+```
+
+My regression returns 3 variables: the intercept, the hispanic_percentage, and the college_degree_percentage. The intercept is 51673.850, which means that when the Hispanic_percentage and the college_degree_percentage are both 0, the average income in a census tract s 51673.850. The intercept for Hispanic_percentage is -267.633 which means that if you increase the Hispanic_percentage by 1%, this increase is associated with a decrease in the average income in a census tract by 237.633 dollars when holding the college_degree_percentage in that tract constant. The intercept for college_degree_percentage is 3764.704 which means that if you increase the college_degree_percentage by 1%, this increase is associated with an increase in the average income in a census tract by 3764.704 dollars when holding the Hispanic_percentage in that tract constant. The coefficients are statistically significant as shown by the data but they are statistically significant at different P-values. There are two prerequisites for causality. The first is that there must be a significant correlation. The second condition can be fulfilled if there is a temporal sequence of the variables.The second condition is not fulfilled in this study therefore the coefficients do not demonstrate a casual effect. 
+
+My results also consists of two scatter plots, each one answers one of my respective research questions. Scatter plots can only show correlation and that is what is being dispalyed in both scatter plots. My hypothesis was in fact correct. The first scatter plot shows that the average income of a census tract will decrease when the Hispanic percentage increases while the college degree percentage remains constant. The second scatter plot shows that as the college degree percentage increases so does the average income of a census tract when the Hispanic population stays constant. This datavery much aligns with the findings mentioned in the introduction that informed my hypothesis. 
+
+**Conclusion** 
+
+In conclusion, this study demonstrates the importance of studying the correlation between the Hispanic population, income level, and education level.It is concerning to see that as the Hispanic population increases in a certain census tract, the income level decreases. This is most likely due to the may obstacles the Hispanic population has to face due to inequality. This study had many limitations such as lack of data. The Hispanic population variable is very general and this limits the study greatly. In the future it would be valuable to add more variables such as age, gender, nationality, or immigration status. With more variables we are better able to understand why increase in Hispanic population causes income to decrease and explore more about how differnt levels of education effect the outcome.For example high education verus a college education. 
+
+**Work Cited** 
+
+Bureau, US Census. “American Community Survey Data.” Census.gov, 27 Sept. 2022, https://www.census.gov/programs-surveys/acs/data.html. 
+
+Granberry, Phillip, and Vishakha Agarwal. “University of Massachusetts Boston ScholarWorks at UMass Boston - Umb.edu.” School Works at UMass Boston, UMass Boston , Sept. 2021, https://scholarworks.umb.edu/cgi/viewcontent.cgi?article=1268&amp;context=gaston_pubs. 
